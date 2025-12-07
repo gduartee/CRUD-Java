@@ -2,13 +2,13 @@ package com.crud.CRUD.controller;
 
 import com.crud.CRUD.entity.User;
 import com.crud.CRUD.service.UserService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/v1/users")
-
 public class UserController {
     private UserService userService;
 
@@ -18,8 +18,9 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) {
-
-        return null;
+        User user = userService.createUser(createUserDto);
+        URI location = URI.create("v1/users/" + user.getUserId());
+        return ResponseEntity.created(location).body(user);
     }
 
     @GetMapping("/{userId}")
