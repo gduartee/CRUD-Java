@@ -12,7 +12,7 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID userId;
 
     @Column(name = "username")
@@ -24,10 +24,6 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Version
-    @Column(name = "version")
-    private Long version;
-
     @CreationTimestamp
     private Instant creationTimestamp;
 
@@ -38,13 +34,10 @@ public class User {
 
     }
 
-    public User(UUID userId, String username, String email, String password, Instant creationTimestamp, Instant updatedTimestamp) {
-        this.userId = userId;
+    public User( String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.creationTimestamp = creationTimestamp;
-        this.updatedTimestamp = updatedTimestamp;
     }
 
     public UUID getUserId() {

@@ -19,17 +19,15 @@ public class UserService {
     }
 
     @Transactional
-    public User createUser(CreateUserDto createUserDto) {
+    public UUID createUser(CreateUserDto createUserDto) {
         // DTO -> ENTITY
         var entity = new User
                 (
-                        UUID.randomUUID(),
                         createUserDto.username(),
                         createUserDto.email(),
-                        createUserDto.password(),
-                        Instant.now(),
-                        null
+                        createUserDto.password()
                 );
-        return userRepository.save(entity);
+        var userSaved = userRepository.save(entity);
+        return userSaved.getUserId();
     }
 }
