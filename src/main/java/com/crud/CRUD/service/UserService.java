@@ -6,20 +6,21 @@ import com.crud.CRUD.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Transactional
-    public UUID createUser(CreateUserDto createUserDto) {
+    public User createUser(CreateUserDto createUserDto) {
         // DTO -> ENTITY
         var entity = new User
                 (
@@ -27,7 +28,15 @@ public class UserService {
                         createUserDto.email(),
                         createUserDto.password()
                 );
-        var userSaved = userRepository.save(entity);
-        return userSaved.getUserId();
+        return userRepository.save(entity);
+    }
+
+    public Optional<User> getUserById(String userId){
+        return userRepository.findById(UUID.fromString(userId));
+
+    }
+
+    public List<User> listUsers(){
+        return userRepository.findAll();
     }
 }
