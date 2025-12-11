@@ -1,7 +1,11 @@
 package com.crud.CRUD.controller;
 
+import com.crud.CRUD.controller.dto.CreateAccountDto;
+import com.crud.CRUD.controller.dto.CreateUserDto;
+import com.crud.CRUD.controller.dto.UpdateUserDto;
 import com.crud.CRUD.entity.User;
 import com.crud.CRUD.service.UserService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +55,13 @@ public class UserController {
     public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId){
         userService.deleteById(userId);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{userId}/accounts")
+    public ResponseEntity<Void> createAccount(@PathVariable("userId") String userId,
+                                              @RequestBody CreateAccountDto createAccountDto){
+
+        userService.createAccount(userId, createAccountDto);
+        return ResponseEntity.ok().build();
     }
 }
