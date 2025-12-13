@@ -1,8 +1,10 @@
 package com.crud.CRUD.controller;
 
+import com.crud.CRUD.controller.dto.AccountResponseDto;
 import com.crud.CRUD.controller.dto.CreateAccountDto;
 import com.crud.CRUD.controller.dto.CreateUserDto;
 import com.crud.CRUD.controller.dto.UpdateUserDto;
+import com.crud.CRUD.entity.Account;
 import com.crud.CRUD.entity.User;
 import com.crud.CRUD.service.UserService;
 import org.apache.coyote.Response;
@@ -22,7 +24,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto){
+    public ResponseEntity<User> createUser(@RequestBody CreateUserDto createUserDto) {
         var user = userService.createUser(createUserDto);
         URI uri = URI.create("/v1/users/" + user.getUserId().toString());
 
@@ -32,36 +34,43 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<User> getUserById(@PathVariable("userId") String userId) {
         var user = userService.getUserById(userId);
-        if(user.isPresent())
+        if (user.isPresent())
             return ResponseEntity.ok(user.get());
         else
             return ResponseEntity.notFound().build();
     }
 
     @GetMapping()
-    public ResponseEntity<List<User>> listUsers(){
+    public ResponseEntity<List<User>> listUsers() {
         var users = userService.listUsers();
 
         return ResponseEntity.ok(users);
     }
 
     @PutMapping("/{userId}")
-    public ResponseEntity<Void> updateUserById(@PathVariable("userId") String userId, @RequestBody UpdateUserDto updateUserDto){
+    public ResponseEntity<Void> updateUserById(@PathVariable("userId") String userId, @RequestBody UpdateUserDto updateUserDto) {
         userService.updateUserById(userId, updateUserDto);
         return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId){
+    public ResponseEntity<Void> deleteById(@PathVariable("userId") String userId) {
         userService.deleteById(userId);
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/{userId}/accounts")
     public ResponseEntity<Void> createAccount(@PathVariable("userId") String userId,
-                                              @RequestBody CreateAccountDto createAccountDto){
+                                              @RequestBody CreateAccountDto createAccountDto) {
 
         userService.createAccount(userId, createAccountDto);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/accounts")
+    public ResponseEntity<List<AccountResponseDto>> listAccounts(@PathVariable("userId") String userId) {
+        var accounts = userService.listAccounts(userId);
+
+        return ResponseEntity.ok(accounts);
     }
 }

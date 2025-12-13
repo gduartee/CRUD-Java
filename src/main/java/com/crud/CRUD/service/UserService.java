@@ -1,5 +1,6 @@
 package com.crud.CRUD.service;
 
+import com.crud.CRUD.controller.dto.AccountResponseDto;
 import com.crud.CRUD.controller.dto.CreateAccountDto;
 import com.crud.CRUD.controller.dto.CreateUserDto;
 import com.crud.CRUD.controller.dto.UpdateUserDto;
@@ -28,7 +29,7 @@ public class UserService {
     private BillingAddressRepository billingAddressRepository;
 
 
-    public UserService(UserRepository userRepository, AccountRepository accountRepository, BillingAddressRepository bIllingAddressRepository) {
+    public UserService(UserRepository userRepository, AccountRepository accountRepository, BillingAddressRepository billingAddressRepository) {
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
         this.billingAddressRepository = billingAddressRepository;
@@ -104,5 +105,15 @@ public class UserService {
         );
 
         billingAddressRepository.save(billingAddress);
+    }
+
+    public List<AccountResponseDto> listAccounts(String userId){
+        var user = userRepository.findById(UUID.fromString(userId)).orElseThrow(() -> new ResponseStatusException((HttpStatus.NOT_FOUND)));
+
+        return user.getAccounts()
+                .stream()
+                .map(ac ->
+                        new AccountResponseDto(ac.getAccountId().toString(), ac.getDescription()))
+                .toList();
     }
 }
